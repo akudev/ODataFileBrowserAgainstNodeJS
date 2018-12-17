@@ -1,0 +1,44 @@
+{
+	"d": {
+		"results": [{
+			"Name": "test.txt",
+			"FileID": "/test.txt",
+			"HierarchyLevel": 0,
+			"Description": "1",
+			"ParentFileID": null,
+			"DrillState": "expanded",
+			"__metadata": {
+				"id": "/test.txt",
+				"type": "DemoModel.File",
+				"uri": "Files(/test.txt)"
+			}
+		},
+		{
+			"Name": "test2.txt",
+			"FileID": 2,
+			"HierarchyLevel": 0,
+			"Description": "2",
+			"ParentFileID": null,
+			"DrillState": "expanded",
+			"__metadata": {
+				"id": "Files(2)",
+				"type": "DemoModel.File",
+				"uri": "Files(2)"
+			}
+		},
+		{
+			"Name": "test3.txt",
+			"FileID": 3,
+			"HierarchyLevel": 0,
+			"Description": "3",
+			"ParentFileID": null,
+			"DrillState": "expanded",
+			"__metadata": {
+				"id": "Files(3)",
+				"type": "DemoModel.File",
+				"uri": "Files(3)"
+			}
+		}],
+		"__count": 3
+	}
+}

@@ -1,0 +1,14 @@
+{
+  "name": "OData File Browser",
+  "version": "1.0.0",
+  "description": "Simple File Browser based on UI5 TreeTable and ODataTreeBinding, but without OData backend: instead, there is just a nodeJS-based server which emulates the OData behavior for the needed subset of requests.",
+  "scripts": {
+    "start": "node server.js",
+    "debug": "node --inspect --debug-brk server.js"
+  },
+  "author": "Andreas Kunz",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.16.s"
+  }
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv='Content-Type' content='text/html;charset=UTF-8' />
+		
+		<title>OData File Browser</title>
+		
+		<script src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js" 
+				id="sap-ui-bootstrap" 
+				data-sap-ui-libs="sap.m,sap.ui.table" 
+				data-sap-ui-theme="sap_belize">
+		</script>
+		
+		<script>
+			sap.ui.require(["sap/ui/table/TreeTable", "sap/ui/table/Column", "sap/ui/table/SelectionMode", "sap/ui/model/odata/v2/ODataModel"],
+				function(TreeTable, Column, SelectionMode, ODataModel){
+
+				var oModel = new ODataModel(
+					"/filebrowser",
+					{
+						useBatch: false, // simple nodeJS backend does not support batch calls
+						defaultCountMode: "InlineRepeat"
+					}
+				);
+
+				var oTreeTable = new TreeTable({
+					title: "File Browser based on TreeTable and ODataModel v2",
+					visibleRowCount: 10,
+					columns: [new Column({
+						label : "Name",
+						template: "Name"
+					})],
+					selectionMode : SelectionMode.Single
+				}).setModel(oModel);
+
+				oTreeTable.bindRows({
+					path: "/Files",
+					parameters: {
+						treeAnnotationProperties:{
+							hierarchyLevelFor :"HierarchyLevel",
+							hierarchyParentNodeFor:"ParentFileID",
+							hierarchyNodeFor:"FileID",
+							hierarchyDrillStateFor :"DrillState"
+						},
+						operationMode: "Server",
+						useServersideApplicationFilters: true
+					}
+				});
+				oTreeTable.placeAt('content');
+			});
+			
+		</script>
+	</head>
+	<body id="content" class="sapUiBody sapUiSizeCompact">
+	</body>
+</html>
