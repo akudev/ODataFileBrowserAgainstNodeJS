@@ -3,8 +3,6 @@ var fs = require("fs");
 
 "use strict";
 
-
-const bMOCK = false; // decide here whether mock data from data directory should be used (metadata is always taken from there)
 const sRootDirectoryForBrowser = path.join(".", "app", "rootDirectoryForBrowser"); // the directory below which the browser will operate
 	// can be changed to e.g. "C:\\" on Windows to browse your entire main drive - change at your own risk, as anyone could browse your file structure over the network!
 
@@ -19,27 +17,20 @@ const rPathSeparatorMulti = new RegExp(sSeparator, "g"); // needed later to esca
 
 const _handleDirectoryContentRequest = function(req, res) {
 	var sPath;
-
-	if (bMOCK) {
-		res.type('application/json');
-		res.set('Content-Type', 'application/json');
-		res.sendFile(path.join(__dirname, 'data/data.json'));
+	// get path and paging information from the OData request
+	var iStartIndex = parseInt(req.query["$skip"]);
+	var iLength = parseInt(req.query["$top"]);
+	var sFilter = req.query["$filter"];
+	var match = rParentFileIDPattern.exec(sFilter);
+	if (match) {
+		sPath = path.join(...match[1].split("%2f")); // restore actual path from escaped ID
 	} else {
-		// get path and paging information from the OData request
-		var iStartIndex = parseInt(req.query["$skip"]);
-		var iLength = parseInt(req.query["$top"]);
-		var sFilter = req.query["$filter"];
-		var match = rParentFileIDPattern.exec(sFilter);
-		if (match) {
-			sPath = path.join(...match[1].split("%2f")); // restore actual path from escaped ID
-		} else {
-			sPath = path.sep;
-		}
-
-		var oData = _getDirectoryListing(sPath, iStartIndex, iLength).then(oData => res.json({ // here the response is sent
-			"d": oData // OData wants everything to be below "d"
-		}));		
+		sPath = path.sep;
 	}
+
+	var oData = _getDirectoryListing(sPath, iStartIndex, iLength).then(oData => res.json({ // here the response is sent
+		"d": oData // OData wants everything to be below "d"
+	}));
 }
 
 
