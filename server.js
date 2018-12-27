@@ -11,12 +11,12 @@ var myApp = require('./app/myApp.js');
 var iPort = 2019;
 
 app.get('/filebrowser/:resource', function (req, res) {
-	console.log("Requested resource: " + req.params.resource + " (" + JSON.stringify(req.query) + ")"); // http://localhost:2019/filebrowser/7  =>  resource is: 7
+	console.log("Requested resource: " + req.params.resource + " (" + JSON.stringify(req.query) + ")"); // http://localhost:2019/filebrowser/xyz  =>  resource is: xyz
 	
 	if (req.params.resource === "$metadata") {
 		res.type('application/xml');
 		res.set('Content-Type', 'application/xml');
-		res.sendFile(path.join(__dirname, 'app/data/metadata.xml'));
+		res.sendFile(path.join(__dirname, "app", "data", "metadata.xml"));
 	} else {
 		myApp.handleDirectoryContentRequest(req, res);
 	}
