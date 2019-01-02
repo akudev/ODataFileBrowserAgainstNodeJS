@@ -16,19 +16,20 @@ const rPathSeparatorMulti = new RegExp(sSeparator, "g"); // needed later to esca
 
 
 const _handleDirectoryContentRequest = function(req, res) {
-	var sPath;
+	var sPath = "", sParentFileID = null;
 	// get path and paging information from the OData request
 	var iStartIndex = parseInt(req.query["$skip"]);
 	var iLength = parseInt(req.query["$top"]);
 	var sFilter = req.query["$filter"];
 	var match = rParentFileIDPattern.exec(sFilter);
-	if (match) {
-		sPath = path.join(...match[1].split("%2f")); // restore actual path from escaped ID
+	if (match) { // children inside a certain directory are requested
+		sParentFileID = match[1];
+		sPath = path.join(...match[1].split("%2f")); // restore actual path from escaped ID; the "%2f" has been chosen because it reminded nicely of the URL encoding for slashes. But any other string could be used as well. TODO: And actual occurrences of this string in file names would have to be marked as such.
 	} else {
-		sPath = path.sep;
+		// the root node content is requested; defaults for path and parent file ID apply
 	}
 
-	var oData = _getDirectoryListing(sPath, iStartIndex, iLength).then(oData => res.json({ // here the response is sent
+	var oData = _getDirectoryListing(sPath, iStartIndex, iLength, sParentFileID).then(oData => res.json({ // here the response is sent
 		"d": oData // OData wants everything to be below "d"
 	}));
 }
@@ -40,13 +41,12 @@ const isDirectory = function(sPath) {
 
 
 // gets all files residing in the given folder path and returns them in a structure as required by ODataTreeBinding
-const _getDirectoryListing = function(sDirectoryPath, iStartIndex, iLength) {
+const _getDirectoryListing = function(sDirectoryPath, iStartIndex, iLength, sParentFileID) {
 	return new Promise(function(resolve, reject) { // be prepared for async implementation
 		sDirectoryPath = sDirectoryPath.replace(/\.\./g, ""); // avoid going up in the hierarchy (do not allow access outside sandbox folder)
 		var aParts = sDirectoryPath.split(path.sep).filter(part => part.length > 0);
 		var aFiles = [];
 		var iHierarchyLevel = aParts.length;
-		var sParentFileID = null;
 		var sFileName;
 		var sDrillState;
 	
@@ -67,7 +67,7 @@ const _getDirectoryListing = function(sDirectoryPath, iStartIndex, iLength) {
 			}
 			
 			var sFullPath = path.join(sDirectoryPath, sFileName);
-			sFullPath = sFullPath.replace(rPathSeparatorMulti, "%2f"); // escape the slashes or backslashes in the path to create a valid ID;  TODO: correct escaping (in case %2f exists as part of the file name)
+			sFullPath = sFullPath.replace(rPathSeparatorMulti, "%2f"); // escape the slashes or backslashes in the path to create a valid ID; the "%2f" has been chosen because it reminded nicely of the URL encoding for slashes. But any other string could be used as well. TODO: correct escaping (in case %2f exists as part of the file name)
 	
 			// OData needs some more info on client side than just the file name
 			aFiles.push({
