@@ -4,12 +4,13 @@
 
 Simple OpenUI5 file browser using the TreeTable and ODataTreeBinding, but without OData backend: instead, there is just a Node.js-based server which emulates the OData behavior for the needed subset of requests.
 
+See https://blogs.sap.com/2019/01/02/trees-in-sapui5-build-a-ui5-file-browser-with-odatamodel-on-client-side-but-pure-node.js-no-odata-as-server/ for more background on this project.
 
 
 ## NOTE 
-* This is just a quickly hacked example to demonstrate how the UI5 ODataTreeBinding (from the v2 ODataModel) can be used with the TreeTable control and how a simple Node.js server can be implemented which understands the requests from the ODataModel and supports the paging triggered by the TreeTable control.
+* This is just a quickly hacked example to demonstrate how the UI5 ODataTreeBinding (from the v2 ODataModel) can be used with the TreeTable control and how a simple Node.js server can be implemented which understands the requests from the ODataModel and supports the paging requests triggered by the TreeTable control.
 * This code is NOT guaranteed to work reliable or to be a clean and correct implementation.
-* Despite basic measures to keep the file browsing within a specific subdirectory, it could be that the server side provides read access to all file names on the computer running the app, so use it only for brief testing.
+* Despite basic measures to keep the file browsing within a specific subdirectory, it could be that the server side provides read access to all file names on the computer running the app, so use it only for limited-time testing.
 * This app has only been tested on Windows. File access on other operating systems might not work correctly.
 
 ## Background: Trees in OData v2
